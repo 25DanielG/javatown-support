@@ -3,13 +3,10 @@
 	"name": "JavaTown",
 	"patterns": [
 		{
-			"include": "#comment"
+			"include": "#comments-javadoc"
 		},
 		{
-			"include": "#keywords"
-		},
-		{
-			"include": "#strings"
+			"include": "#code"
 		}
 	],
 	"repository": {
@@ -34,6 +31,93 @@
 				{
 					"match": "(!|&&|\\|\\|)",
 					"name": "keyword.operator.logical.javatown"
+				}
+			]
+		},
+		"comments": {
+			"patterns": [
+				{
+					"captures": {
+						"0": {
+							"name": "punctuation.definition.comment.javatown"
+						}
+					},
+					"match": "/\\*\\*/",
+					"name": "comment.block.empty.javatown"
+				},
+				{
+					"include": "#comments-inline"
+				}
+			]
+		},
+		"comments-inline": {
+			"patterns": [
+				{
+					"begin": "/\\*",
+					"captures": {
+						"0": {
+							"name": "punctuation.definition.comment.javatown"
+						}
+					},
+					"end": "\\*/",
+					"name": "comment.block.javatown"
+				},
+				{
+					"begin": "(^[ \\t]+)?(?=//)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.whitespace.comment.leading.javatown"
+						}
+					},
+					"end": "(?!\\G)",
+					"patterns": [
+						{
+							"begin": "//",
+							"beginCaptures": {
+								"0": {
+									"name": "punctuation.definition.comment.javatown"
+								}
+							},
+							"end": "\\n",
+							"name": "comment.line.double-slash.javatown"
+						}
+					]
+				}
+			]
+		},
+		"comments-javadoc": {
+			"patterns": [
+				{
+					"begin": "^\\s*(/\\*\\*)(?!/)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.definition.comment.javatown"
+						}
+					},
+					"end": "\\*/",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.javatown"
+						}
+					},
+					"name": "comment.block.javadoc.javatown",
+					"patterns": [
+						{
+							"match": "@(author|return|version)\\b",
+							"name": "keyword.other.documentation.javadoc.javatown"
+						},
+						{
+							"match": "(@param)\\s+(\\S+)",
+							"captures": {
+								"1": {
+									"name": "keyword.other.documentation.javadoc.javatown"
+								},
+								"2": {
+									"name": "variable.parameter.javatown"
+								}
+							}
+						}
+					]
 				}
 			]
 		},
@@ -155,93 +239,6 @@
 				{
 					"match": ";",
 					"name": "punctuation.terminator.javatown"
-				}
-			]
-		},
-		"comments": {
-			"patterns": [
-				{
-					"captures": {
-						"0": {
-							"name": "punctuation.definition.comment.javatown"
-						}
-					},
-					"match": "/\\*\\*/",
-					"name": "comment.block.empty.javatown"
-				},
-				{
-					"include": "#comments-inline"
-				}
-			]
-		},
-		"comments-inline": {
-			"patterns": [
-				{
-					"begin": "/\\*",
-					"captures": {
-						"0": {
-							"name": "punctuation.definition.comment.javatown"
-						}
-					},
-					"end": "\\*/",
-					"name": "comment.block.javatown"
-				},
-				{
-					"begin": "(^[ \\t]+)?(?=//)",
-					"beginCaptures": {
-						"1": {
-							"name": "punctuation.whitespace.comment.leading.javatown"
-						}
-					},
-					"end": "(?!\\G)",
-					"patterns": [
-						{
-							"begin": "//",
-							"beginCaptures": {
-								"0": {
-									"name": "punctuation.definition.comment.javatown"
-								}
-							},
-							"end": "\\n",
-							"name": "comment.line.double-slash.javatown"
-						}
-					]
-				}
-			]
-		},
-		"comments-javadoc": {
-			"patterns": [
-				{
-					"begin": "^\\s*(/\\*\\*)(?!/)",
-					"beginCaptures": {
-						"1": {
-							"name": "punctuation.definition.comment.javatown"
-						}
-					},
-					"end": "\\*/",
-					"endCaptures": {
-						"0": {
-							"name": "punctuation.definition.comment.javatown"
-						}
-					},
-					"name": "comment.block.javadoc.javatown",
-					"patterns": [
-						{
-							"match": "@(author|return|version)\\b",
-							"name": "keyword.other.documentation.javadoc.javatown"
-						},
-						{
-							"match": "(@param)\\s+(\\S+)",
-							"captures": {
-								"1": {
-									"name": "keyword.other.documentation.javadoc.javatown"
-								},
-								"2": {
-									"name": "variable.parameter.javatown"
-								}
-							}
-						}
-					]
 				}
 			]
 		},
