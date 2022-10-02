@@ -127,6 +127,9 @@
 			"patterns": [
 				{
 					"include": "#storage-modifiers"
+				},
+				{
+					"include": "#variables"
 				}
 			]
 		},
@@ -237,6 +240,15 @@
 					"include": "#function-call"
 				},
 				{
+					"include": "#variables"
+				},
+				{
+					"include": "#boolean-literal"
+				},
+				{
+					"include": "#null-literal"
+				},
+				{
 					"include": "#storage-modifiers"
 				},
 				{
@@ -244,6 +256,9 @@
 				},
 				{
 					"include": "#strings"
+				},
+				{
+					"include": "#primitive-types"
 				},
 				{
 					"match": "\\.",
@@ -255,17 +270,25 @@
 				}
 			]
 		},
-		"constants-and-special-vars": {
+		"boolean-literal": {
 			"patterns": [
 				{
-					"match": "\\b(true|false|null)\\b",
-					"name": "constant.language.javatown"
+					"name": "constant.language.boolean.true.javatown",
+					"match": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))true(?![_$[:alnum:]])(?:(?=\\.\\.\\.)|(?!\\.))"
 				},
 				{
-					"match": "\\bthis\\b",
-					"name": "variable.language.this.javatown"
+					"name": "constant.language.boolean.false.javatown",
+					"match": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))false(?![_$[:alnum:]])(?:(?=\\.\\.\\.)|(?!\\.))"
 				}
 			]
+		},
+		"null-literal": {
+			"name": "constant.language.null.javatown",
+			"match": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))null(?![_$[:alnum:]])(?:(?=\\.\\.\\.)|(?!\\.))"
+		},
+		"primitive-types": {
+			"match": "\\b(void|boolean|byte|char|short|int|float|long|double)\\b",
+			"name": "storage.type.primitive.javatown"
 		},
 		"function-call": {
 			"begin": "([A-Za-z_$][\\w$]*)\\s*(\\()",
@@ -365,11 +388,11 @@
 					"begin": "{",
 					"beginCaptures": {
 						"0": {
-							"name": "punctuation.section.method.begin.bracket.curly.java"
+							"name": "punctuation.section.method.begin.bracket.curly.javatown"
 						}
 					},
 					"end": "(?=})",
-					"contentName": "meta.method.body.java",
+					"contentName": "meta.method.body.javatown",
 					"patterns": [
 						{
 							"include": "#code"
@@ -499,7 +522,7 @@
 		},
 		"storage-modifiers": {
 			"match": "\\b(public|private)\\b",
-			"name": "storage.modifier.java"
+			"name": "storage.modifier.javatown"
 		},
 		"strings": {
 			"patterns": [
