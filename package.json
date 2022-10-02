@@ -1,0 +1,26 @@
+{
+  "name": "javatown-support",
+  "displayName": "JavaTown Support",
+  "description": "Vscode langauge support for my school's java language called JavaTown",
+  "version": "0.0.1",
+  "publisher": "25DanielG",
+  "engines": {
+    "vscode": "*"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "javatown",
+      "aliases": ["JavaTown", "javatown"],
+      "extensions": [".jt"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "javatown",
+      "scopeName": "source.jt",
+      "path": "./syntaxes/javatown.tmLanguage.json"
+    }]
+  }
+}

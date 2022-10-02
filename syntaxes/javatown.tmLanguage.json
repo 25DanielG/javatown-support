@@ -1,0 +1,531 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "JavaTown",
+	"patterns": [
+		{
+			"include": "#comment"
+		},
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [
+				{
+					"match": "\\b(return|if|else)\\b",
+					"name": "keyword.control.javatown"
+				},
+				{
+					"match": "(===?|!=|<=|>=|<>|<|>)",
+					"name": "keyword.operator.comparison.javatown"
+				},
+				{
+					"match": "(=)",
+					"name": "keyword.operator.assignment.javatown"
+				},
+				{
+					"match": "(\\-|\\+|\\*|\\/|%)",
+					"name": "keyword.operator.arithmetic.javatown"
+				},
+				{
+					"match": "(!|&&|\\|\\|)",
+					"name": "keyword.operator.logical.javatown"
+				}
+			]
+		},
+		"member-variables": {
+			"begin": "(?=private|public)",
+			"end": "(?=\\=|;)",
+			"patterns": []
+		},
+		"class": {
+			"begin": "(?=\\w?[\\w\\s-]*\\b(?:class)\\s+[\\w$]+)",
+			"end": "}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.section.class.end.bracket.curly.javatown"
+				}
+			},
+			"name": "meta.class.javatown",
+			"patterns": [
+				{
+					"include": "#generics"
+				},
+				{
+					"include": "#comments"
+				},
+				{
+					"captures": {
+						"1": {
+							"name": "storage.modifier.javatown"
+						},
+						"2": {
+							"name": "entity.name.type.class.javatown"
+						}
+					},
+					"match": "(class)\\s+([\\w$]+)",
+					"name": "meta.class.identifier.javatown"
+				},
+				{
+					"begin": "{",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.section.class.begin.bracket.curly.javatown"
+						}
+					},
+					"end": "(?=})",
+					"contentName": "meta.class.body.javatown",
+					"patterns": [
+						{
+							"include": "#class-body"
+						}
+					]
+				}
+			]
+		},
+		"class-body": {
+			"patterns": [
+				{
+					"include": "#comments-javadoc"
+				},
+				{
+					"include": "#comments"
+				},
+				{
+					"include": "#class"
+				},
+				{
+					"include": "#generics"
+				},
+				{
+					"include": "#member-variables"
+				},
+				{
+					"include": "#code"
+				}
+			]
+		},
+		"class-fields-and-methods": {
+			"patterns": [
+				{
+					"begin": "(?=\\=)",
+					"end": "(?=;)",
+					"patterns": [
+						{
+							"include": "#code"
+						}
+					]
+				}
+			]
+		},
+		"code": {
+			"patterns": [
+				{
+					"include": "#comments"
+				},
+				{
+					"include": "#class"
+				},
+				{
+					"include": "#parens"
+				},
+				{
+					"include": "#keywords"
+				},
+				{
+					"include": "#method-call"
+				},
+				{
+					"include": "#function-call"
+				},
+				{
+					"include": "#objects"
+				},
+				{
+					"include": "#strings"
+				},
+				{
+					"match": "\\.",
+					"name": "punctuation.separator.period.javatown"
+				},
+				{
+					"match": ";",
+					"name": "punctuation.terminator.javatown"
+				}
+			]
+		},
+		"comments": {
+			"patterns": [
+				{
+					"captures": {
+						"0": {
+							"name": "punctuation.definition.comment.javatown"
+						}
+					},
+					"match": "/\\*\\*/",
+					"name": "comment.block.empty.javatown"
+				},
+				{
+					"include": "#comments-inline"
+				}
+			]
+		},
+		"comments-inline": {
+			"patterns": [
+				{
+					"begin": "/\\*",
+					"captures": {
+						"0": {
+							"name": "punctuation.definition.comment.javatown"
+						}
+					},
+					"end": "\\*/",
+					"name": "comment.block.javatown"
+				},
+				{
+					"begin": "(^[ \\t]+)?(?=//)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.whitespace.comment.leading.javatown"
+						}
+					},
+					"end": "(?!\\G)",
+					"patterns": [
+						{
+							"begin": "//",
+							"beginCaptures": {
+								"0": {
+									"name": "punctuation.definition.comment.javatown"
+								}
+							},
+							"end": "\\n",
+							"name": "comment.line.double-slash.javatown"
+						}
+					]
+				}
+			]
+		},
+		"comments-javadoc": {
+			"patterns": [
+				{
+					"begin": "^\\s*(/\\*\\*)(?!/)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.definition.comment.javatown"
+						}
+					},
+					"end": "\\*/",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.javatown"
+						}
+					},
+					"name": "comment.block.javadoc.javatown",
+					"patterns": [
+						{
+							"match": "@(author|return|version)\\b",
+							"name": "keyword.other.documentation.javadoc.javatown"
+						},
+						{
+							"match": "(@param)\\s+(\\S+)",
+							"captures": {
+								"1": {
+									"name": "keyword.other.documentation.javadoc.javatown"
+								},
+								"2": {
+									"name": "variable.parameter.javatown"
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		"constants-and-special-vars": {
+			"patterns": [
+				{
+					"match": "\\b(true|false|null)\\b",
+					"name": "constant.language.javatown"
+				},
+				{
+					"match": "\\bthis\\b",
+					"name": "variable.language.this.javatown"
+				}
+			]
+		},
+		"function-call": {
+			"begin": "([A-Za-z_$][\\w$]*)\\s*(\\()",
+			"beginCaptures": {
+				"1": {
+					"name": "entity.name.function.javatown"
+				},
+				"2": {
+					"name": "punctuation.definition.parameters.begin.bracket.round.javatown"
+				}
+			},
+			"end": "\\)",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.parameters.end.bracket.round.javatown"
+				}
+			},
+			"name": "meta.function-call.javatown",
+			"patterns": [
+				{
+					"include": "#code"
+				}
+			]
+		},
+		"method-call": {
+			"begin": "(\\.)\\s*([A-Za-z_$][\\w$]*)\\s*(\\()",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.separator.period.javatown"
+				},
+				"2": {
+					"name": "entity.name.function.javatown"
+				},
+				"3": {
+					"name": "punctuation.definition.parameters.begin.bracket.round.javatown"
+				}
+			},
+			"end": "\\)",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.parameters.end.bracket.round.javatown"
+				}
+			},
+			"name": "meta.method-call.javatown",
+			"patterns": [
+				{
+					"include": "#code"
+				}
+			]
+		},
+		"methods": {
+			"begin": "(?!new)(?=[\\w<].*\\s+)(?=([^=/]|/(?!/))+\\()",
+			"end": "(})|(?=;)",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.section.method.end.bracket.curly.javatown"
+				}
+			},
+			"name": "meta.method.javatown",
+			"patterns": [
+				{
+					"include": "#storage-modifiers"
+				},
+				{
+					"begin": "(\\w+)\\s*(\\()",
+					"beginCaptures": {
+						"1": {
+							"name": "entity.name.function.javatown"
+						},
+						"2": {
+							"name": "punctuation.definition.parameters.begin.bracket.round.javatown"
+						}
+					},
+					"end": "\\)",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.parameters.end.bracket.round.javatown"
+						}
+					},
+					"name": "meta.method.identifier.javatown",
+					"patterns": [
+						{
+							"include": "#parameters"
+						},
+						{
+							"include": "#parens"
+						},
+						{
+							"include": "#comments"
+						}
+					]
+				},
+				{
+					"include": "#generics"
+				},
+				{
+					"begin": "{",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.section.method.begin.bracket.curly.java"
+						}
+					},
+					"end": "(?=})",
+					"contentName": "meta.method.body.java",
+					"patterns": [
+						{
+							"include": "#code"
+						}
+					]
+				},
+				{
+					"include": "#comments"
+				}
+			]
+		},
+		"object-types": {
+			"patterns": [
+				{
+					"include": "#generics"
+				},
+				{
+					"begin": "\\b((?:[A-Za-z_]\\w*\\s*\\.\\s*)*)([A-Z_]\\w*)\\s*(?=\\[)",
+					"beginCaptures": {
+						"1": {
+							"patterns": [
+								{
+									"match": "[A-Za-z_]\\w*",
+									"name": "storage.type.javatown"
+								},
+								{
+									"match": "\\.",
+									"name": "punctuation.separator.period.javatown"
+								}
+							]
+						},
+						"2": {
+							"name": "storage.type.object.array.javatown"
+						}
+					},
+					"end": "(?!\\s*\\[)",
+					"patterns": [
+						{
+							"include": "#comments"
+						},
+						{
+							"include": "#parens"
+						}
+					]
+				},
+				{
+					"match": "\\b((?:[A-Za-z_]\\w*\\s*\\.\\s*)*[A-Z_]\\w*)\\s*(?=<)",
+					"captures": {
+						"1": {
+							"patterns": [
+								{
+									"match": "[A-Za-z_]\\w*",
+									"name": "storage.type.javatown"
+								},
+								{
+									"match": "\\.",
+									"name": "punctuation.separator.period.javatown"
+								}
+							]
+						}
+					}
+				},
+				{
+					"match": "\\b((?:[A-Za-z_]\\w*\\s*\\.\\s*)*[A-Z_]\\w*)\\b((?=\\s*[A-Za-z$_\\n])|(?=\\s*\\.\\.\\.))",
+					"captures": {
+						"1": {
+							"patterns": [
+								{
+									"match": "[A-Za-z_]\\w*",
+									"name": "storage.type.javatown"
+								},
+								{
+									"match": "\\.",
+									"name": "punctuation.separator.period.javatown"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"objects": {
+			"match": "(?<![\\w$])[a-zA-Z_$][\\w$]*(?=\\s*\\.\\s*[\\w$]+)",
+			"name": "variable.other.object.javatown"
+		},
+		"parens": {
+			"patterns": [
+				{
+					"begin": "\\(",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.bracket.round.javatown"
+						}
+					},
+					"end": "\\)",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.bracket.round.javatown"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#code"
+						}
+					]
+				},
+				{
+					"begin": "{",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.bracket.curly.javatown"
+						}
+					},
+					"end": "}",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.bracket.curly.javatown"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#code"
+						}
+					]
+				}
+			]
+		},
+		"strings": {
+			"patterns": [
+				{
+					"begin": "\"",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.begin.javatown"
+						}
+					},
+					"end": "\"",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.end.javatown"
+						}
+					},
+					"name": "string.quoted.double.javatown",
+					"patterns": [
+						{
+							"match": "\\\\.",
+							"name": "constant.character.escape.javatown"
+						}
+					]
+				},
+				{
+					"begin": "'",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.begin.javatown"
+						}
+					},
+					"end": "'",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.end.javatown"
+						}
+					}
+				}
+			]
+		}
+	},
+	"scopeName": "source.jt"
+}
