@@ -124,7 +124,11 @@
 		"member-variables": {
 			"begin": "(?=private|public)",
 			"end": "(?=\\=|;)",
-			"patterns": []
+			"patterns": [
+				{
+					"include": "#storage-modifiers"
+				}
+			]
 		},
 		"class": {
 			"begin": "(?=\\w?[\\w\\s-]*\\b(?:class)\\s+[\\w$]+)",
@@ -141,6 +145,9 @@
 				},
 				{
 					"include": "#comments"
+				},
+				{
+					"include": "#storage-modifiers"
 				},
 				{
 					"captures": {
@@ -189,6 +196,9 @@
 					"include": "#member-variables"
 				},
 				{
+					"include": "#storage-modifiers"
+				},
+				{
 					"include": "#code"
 				}
 			]
@@ -225,6 +235,9 @@
 				},
 				{
 					"include": "#function-call"
+				},
+				{
+					"include": "#storage-modifiers"
 				},
 				{
 					"include": "#objects"
@@ -483,6 +496,10 @@
 					]
 				}
 			]
+		},
+		"storage-modifiers": {
+			"match": "\\b(public|private)\\b",
+			"name": "storage.modifier.java"
 		},
 		"strings": {
 			"patterns": [
