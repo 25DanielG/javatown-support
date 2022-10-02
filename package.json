@@ -7,6 +7,10 @@
   "engines": {
     "vscode": "*"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/25DanielG/javatown-support"
+  },
   "categories": [
     "Programming Languages"
   ],
