@@ -2,7 +2,7 @@
   "name": "javatown-support",
   "displayName": "JavaTown Support",
   "description": "Vscode langauge support for my school's java language called JavaTown",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publisher": "25DanielG",
   "engines": {
     "vscode": "*"
