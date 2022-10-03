@@ -31,6 +31,10 @@
 				{
 					"match": "(!|&&|\\|\\|)",
 					"name": "keyword.operator.logical.javatown"
+				},
+				{
+					"match": "\\b(new)\\b",
+					"name": "keyword.operator.new.javatown"
 				}
 			]
 		},
