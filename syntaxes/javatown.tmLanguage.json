@@ -1,40 +1,325 @@
 {
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "JavaTown",
+	"scopeName": "source.jt",
 	"patterns": [
 		{
-			"include": "#comments-javadoc"
+			"include": "#comments-javatowndoc"
 		},
 		{
 			"include": "#code"
 		}
 	],
 	"repository": {
-		"keywords": {
+		"all-types": {
 			"patterns": [
 				{
-					"match": "\\b(return|if|else)\\b",
-					"name": "keyword.control.javatown"
+					"include": "#primitive-types"
 				},
 				{
-					"match": "(===?|!=|<=|>=|<>|<|>)",
-					"name": "keyword.operator.comparison.javatown"
+					"include": "#object-types"
+				}
+			]
+		},
+		"annotations": {
+			"patterns": [
+				{
+					"begin": "((@)\\s*([^\\s(]+))(\\()",
+					"beginCaptures": {
+						"2": {
+							"name": "punctuation.definition.annotation.javatown"
+						},
+						"3": {
+							"name": "storage.type.annotation.javatown"
+						},
+						"4": {
+							"name": "punctuation.definition.annotation-arguments.begin.bracket.round.javatown"
+						}
+					},
+					"end": "\\)",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.annotation-arguments.end.bracket.round.javatown"
+						}
+					},
+					"name": "meta.declaration.annotation.javatown",
+					"patterns": [
+						{
+							"captures": {
+								"1": {
+									"name": "constant.other.key.javatown"
+								},
+								"2": {
+									"name": "keyword.operator.assignment.javatown"
+								}
+							},
+							"match": "(\\w*)\\s*(=)"
+						},
+						{
+							"include": "#code"
+						}
+					]
+				}
+			]
+		},
+		"anonymous-block-and-instance-initializer": {
+			"begin": "{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.section.block.begin.bracket.curly.javatown"
+				}
+			},
+			"end": "}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.section.block.end.bracket.curly.javatown"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#code"
+				}
+			]
+		},
+		"anonymous-classes-and-new": {
+			"begin": "\\bnew\\b",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.control.new.javatown"
+				}
+			},
+			"end": "(?=;|\\)|\\]|\\.|,|\\?|:|}|\\+|\\-|\\*|\\/(?!\\/|\\*)|%|!|&|\\||\\^|=)",
+			"patterns": [
+				{
+					"include": "#comments"
 				},
 				{
-					"match": "(=)",
-					"name": "keyword.operator.assignment.javatown"
+					"include": "#function-call"
 				},
 				{
-					"match": "(\\-|\\+|\\*|\\/|%)",
-					"name": "keyword.operator.arithmetic.javatown"
+					"include": "#all-types"
 				},
 				{
-					"match": "(!|&&|\\|\\|)",
-					"name": "keyword.operator.logical.javatown"
+					"begin": "(?<=\\))",
+					"end": "(?=;|\\)|\\]|\\.|,|\\?|:|}|\\+|\\-|\\*|\\/(?!\\/|\\*)|%|!|&|\\||\\^|=)",
+					"patterns": [
+						{
+							"include": "#comments"
+						},
+						{
+							"begin": "{",
+							"beginCaptures": {
+								"0": {
+									"name": "punctuation.section.inner-class.begin.bracket.curly.javatown"
+								}
+							},
+							"end": "}",
+							"endCaptures": {
+								"0": {
+									"name": "punctuation.section.inner-class.end.bracket.curly.javatown"
+								}
+							},
+							"name": "meta.inner-class.javatown",
+							"patterns": [
+								{
+									"include": "#class-body"
+								}
+							]
+						}
+					]
 				},
 				{
-					"match": "\\b(new)\\b",
-					"name": "keyword.operator.new.javatown"
+					"begin": "(?<=\\])",
+					"end": "(?=;|\\)|\\]|\\.|,|\\?|:|}|\\+|\\-|\\*|\\/(?!\\/|\\*)|%|!|&|\\||\\^|=)",
+					"patterns": [
+						{
+							"include": "#comments"
+						},
+						{
+							"begin": "{",
+							"beginCaptures": {
+								"0": {
+									"name": "punctuation.section.array-initializer.begin.bracket.curly.javatown"
+								}
+							},
+							"end": "}",
+							"endCaptures": {
+								"0": {
+									"name": "punctuation.section.array-initializer.end.bracket.curly.javatown"
+								}
+							},
+							"name": "meta.array-initializer.javatown",
+							"patterns": [
+								{
+									"include": "#code"
+								}
+							]
+						}
+					]
+				},
+				{
+					"include": "#parens"
+				}
+			]
+		},
+		"class": {
+			"begin": "(?=\\w?[\\w\\s-]*\\b(?:class)\\s+[\\w$]+)",
+			"end": "}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.section.class.end.bracket.curly.javatown"
+				}
+			},
+			"name": "meta.class.javatown",
+			"patterns": [
+				{
+					"include": "#storage-modifiers"
+				},
+				{
+					"include": "#comments"
+				},
+				{
+					"captures": {
+						"1": {
+							"name": "storage.modifier.javatown"
+						},
+						"2": {
+							"name": "entity.name.type.class.javatown"
+						}
+					},
+					"match": "(class|(?<!@)interface|enum)\\s+([\\w$]+)",
+					"name": "meta.class.identifier.javatown"
+				},
+				{
+					"begin": "{",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.section.class.begin.bracket.curly.javatown"
+						}
+					},
+					"end": "(?=})",
+					"contentName": "meta.class.body.javatown",
+					"patterns": [
+						{
+							"include": "#class-body"
+						}
+					]
+				}
+			]
+		},
+		"class-body": {
+			"patterns": [
+				{
+					"include": "#comments-javatowndoc"
+				},
+				{
+					"include": "#comments"
+				},
+				{
+					"include": "#class"
+				},
+				{
+					"include": "#static-initializer"
+				},
+				{
+					"include": "#class-fields-and-methods"
+				},
+				{
+					"include": "#annotations"
+				},
+				{
+					"include": "#storage-modifiers"
+				},
+				{
+					"include": "#member-variables"
+				},
+				{
+					"include": "#code"
+				}
+			]
+		},
+		"class-fields-and-methods": {
+			"patterns": [
+				{
+					"begin": "(?=\\=)",
+					"end": "(?=;)",
+					"patterns": [
+						{
+							"include": "#code"
+						}
+					]
+				},
+				{
+					"include": "#methods"
+				}
+			]
+		},
+		"code": {
+			"patterns": [
+				{
+					"include": "#annotations"
+				},
+				{
+					"include": "#comments"
+				},
+				{
+					"include": "#class"
+				},
+				{
+					"include": "#record"
+				},
+				{
+					"include": "#anonymous-block-and-instance-initializer"
+				},
+				{
+					"include": "#parens"
+				},
+				{
+					"include": "#constants-and-special-vars"
+				},
+				{
+					"include": "#numbers"
+				},
+				{
+					"include": "#anonymous-classes-and-new"
+				},
+				{
+					"include": "#keywords"
+				},
+				{
+					"include": "#storage-modifiers"
+				},
+				{
+					"include": "#method-call"
+				},
+				{
+					"include": "#function-call"
+				},
+				{
+					"include": "#variables"
+				},
+				{
+					"include": "#variables-local"
+				},
+				{
+					"include": "#objects"
+				},
+				{
+					"include": "#properties"
+				},
+				{
+					"include": "#strings"
+				},
+				{
+					"include": "#all-types"
+				},
+				{
+					"match": "\\.",
+					"name": "punctuation.separator.period.javatown"
+				},
+				{
+					"match": ";",
+					"name": "punctuation.terminator.javatown"
 				}
 			]
 		},
@@ -89,7 +374,7 @@
 				}
 			]
 		},
-		"comments-javadoc": {
+		"comments-javatowndoc": {
 			"patterns": [
 				{
 					"begin": "^\\s*(/\\*\\*)(?!/)",
@@ -104,19 +389,44 @@
 							"name": "punctuation.definition.comment.javatown"
 						}
 					},
-					"name": "comment.block.javadoc.javatown",
+					"name": "comment.block.javatowndoc.javatown",
 					"patterns": [
 						{
-							"match": "@(author|return|version)\\b",
-							"name": "keyword.other.documentation.javadoc.javatown"
+							"match": "@(author|deprecated|return|see|serial|since|version)\\b",
+							"name": "keyword.other.documentation.javatowndoc.javatown"
 						},
 						{
 							"match": "(@param)\\s+(\\S+)",
 							"captures": {
 								"1": {
-									"name": "keyword.other.documentation.javadoc.javatown"
+									"name": "keyword.other.documentation.javatowndoc.javatown"
 								},
 								"2": {
+									"name": "variable.parameter.javatown"
+								}
+							}
+						},
+						{
+							"match": "(@(?:exception|throws))\\s+(\\S+)",
+							"captures": {
+								"1": {
+									"name": "keyword.other.documentation.javatowndoc.javatown"
+								},
+								"2": {
+									"name": "entity.name.type.class.javatown"
+								}
+							}
+						},
+						{
+							"match": "{(@link)\\s+(\\S+)?#([\\w$]+\\s*\\([^\\(\\)]*\\)).*?}",
+							"captures": {
+								"1": {
+									"name": "keyword.other.documentation.javatowndoc.javatown"
+								},
+								"2": {
+									"name": "entity.name.type.class.javatown"
+								},
+								"3": {
 									"name": "variable.parameter.javatown"
 								}
 							}
@@ -125,174 +435,21 @@
 				}
 			]
 		},
-		"member-variables": {
-			"begin": "(?=private|public)",
-			"end": "(?=\\=|;)",
+		"constants-and-special-vars": {
 			"patterns": [
 				{
-					"include": "#storage-modifiers"
+					"match": "\\b(true|false|null)\\b",
+					"name": "constant.language.javatown"
 				},
 				{
-					"include": "#variables"
+					"match": "\\bthis\\b",
+					"name": "variable.language.this.javatown"
+				},
+				{
+					"match": "\\bsuper\\b",
+					"name": "variable.language.javatown"
 				}
 			]
-		},
-		"class": {
-			"begin": "(?=\\w?[\\w\\s-]*\\b(?:class)\\s+[\\w$]+)",
-			"end": "}",
-			"endCaptures": {
-				"0": {
-					"name": "punctuation.section.class.end.bracket.curly.javatown"
-				}
-			},
-			"name": "meta.class.javatown",
-			"patterns": [
-				{
-					"include": "#generics"
-				},
-				{
-					"include": "#comments"
-				},
-				{
-					"include": "#storage-modifiers"
-				},
-				{
-					"captures": {
-						"1": {
-							"name": "storage.modifier.javatown"
-						},
-						"2": {
-							"name": "entity.name.type.class.javatown"
-						}
-					},
-					"match": "(class)\\s+([\\w$]+)",
-					"name": "meta.class.identifier.javatown"
-				},
-				{
-					"begin": "{",
-					"beginCaptures": {
-						"0": {
-							"name": "punctuation.section.class.begin.bracket.curly.javatown"
-						}
-					},
-					"end": "(?=})",
-					"contentName": "meta.class.body.javatown",
-					"patterns": [
-						{
-							"include": "#class-body"
-						}
-					]
-				}
-			]
-		},
-		"class-body": {
-			"patterns": [
-				{
-					"include": "#comments-javadoc"
-				},
-				{
-					"include": "#comments"
-				},
-				{
-					"include": "#class"
-				},
-				{
-					"include": "#generics"
-				},
-				{
-					"include": "#member-variables"
-				},
-				{
-					"include": "#storage-modifiers"
-				},
-				{
-					"include": "#code"
-				}
-			]
-		},
-		"class-fields-and-methods": {
-			"patterns": [
-				{
-					"begin": "(?=\\=)",
-					"end": "(?=;)",
-					"patterns": [
-						{
-							"include": "#code"
-						}
-					]
-				}
-			]
-		},
-		"code": {
-			"patterns": [
-				{
-					"include": "#comments"
-				},
-				{
-					"include": "#class"
-				},
-				{
-					"include": "#parens"
-				},
-				{
-					"include": "#keywords"
-				},
-				{
-					"include": "#method-call"
-				},
-				{
-					"include": "#function-call"
-				},
-				{
-					"include": "#variables"
-				},
-				{
-					"include": "#boolean-literal"
-				},
-				{
-					"include": "#null-literal"
-				},
-				{
-					"include": "#storage-modifiers"
-				},
-				{
-					"include": "#objects"
-				},
-				{
-					"include": "#strings"
-				},
-				{
-					"include": "#primitive-types"
-				},
-				{
-					"match": "\\.",
-					"name": "punctuation.separator.period.javatown"
-				},
-				{
-					"match": ";",
-					"name": "punctuation.terminator.javatown"
-				}
-			]
-		},
-		"boolean-literal": {
-			"patterns": [
-				{
-					"name": "constant.language.boolean.true.javatown",
-					"match": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))true(?![_$[:alnum:]])(?:(?=\\.\\.\\.)|(?!\\.))"
-				},
-				{
-					"name": "constant.language.boolean.false.javatown",
-					"match": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))false(?![_$[:alnum:]])(?:(?=\\.\\.\\.)|(?!\\.))"
-				}
-			]
-		},
-		"null-literal": {
-			"name": "constant.language.null.javatown",
-			"match": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))null(?![_$[:alnum:]])(?:(?=\\.\\.\\.)|(?!\\.))"
-		},
-		"primitive-types": {
-			"match": "\\b(void|boolean|byte|char|short|int|float|long|double)\\b",
-			"name": "storage.type.primitive.javatown"
 		},
 		"function-call": {
 			"begin": "([A-Za-z_$][\\w$]*)\\s*(\\()",
@@ -314,6 +471,57 @@
 			"patterns": [
 				{
 					"include": "#code"
+				}
+			]
+		},
+		"keywords": {
+			"patterns": [
+				{
+					"match": "\\?|:",
+					"name": "keyword.control.ternary.javatown"
+				},
+				{
+					"match": "\\b(return|if|else)\\b",
+					"name": "keyword.control.javatown"
+				},
+				{
+					"match": "(===?|!=|<=|>=|<>|<|>)",
+					"name": "keyword.operator.comparison.javatown"
+				},
+				{
+					"match": "([+*/%-]=)",
+					"name": "keyword.operator.assignment.arithmetic.javatown"
+				},
+				{
+					"match": "(=)",
+					"name": "keyword.operator.assignment.javatown"
+				},
+				{
+					"match": "(\\-\\-|\\+\\+)",
+					"name": "keyword.operator.increment-decrement.javatown"
+				},
+				{
+					"match": "(\\-|\\+|\\*|\\/|%)",
+					"name": "keyword.operator.arithmetic.javatown"
+				},
+				{
+					"match": "(!|&&|\\|\\|)",
+					"name": "keyword.operator.logical.javatown"
+				}
+			]
+		},
+		"member-variables": {
+			"begin": "(?=private|public)",
+			"end": "(?=\\=|;)",
+			"patterns": [
+				{
+					"include": "#storage-modifiers"
+				},
+				{
+					"include": "#variables"
+				},
+				{
+					"include": "#object-types"
 				}
 			]
 		},
@@ -386,7 +594,20 @@
 					]
 				},
 				{
-					"include": "#generics"
+					"begin": "(?=\\w.*\\s+\\w+\\s*\\()",
+					"end": "(?=\\s+\\w+\\s*\\()",
+					"name": "meta.method.return-type.javatown",
+					"patterns": [
+						{
+							"include": "#all-types"
+						},
+						{
+							"include": "#parens"
+						},
+						{
+							"include": "#comments"
+						}
+					]
 				},
 				{
 					"begin": "{",
@@ -408,11 +629,28 @@
 				}
 			]
 		},
-		"object-types": {
+		"numbers": {
 			"patterns": [
 				{
-					"include": "#generics"
+					"match": "(?x)\n\\b(?<!\\$)\n0(x|X)\n(\n  (?<!\\.)[0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?[Ll]?(?!\\.)\n  |\n  (\n    [0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?\\.?\n    |\n    ([0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?)?\\.[0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?\n  )\n  [Pp][+-]?[0-9]([0-9_]*[0-9])?[FfDd]?\n)\n\\b(?!\\$)",
+					"name": "constant.numeric.hex.javatown"
 				},
+				{
+					"match": "\\b(?<!\\$)0(b|B)[01]([01_]*[01])?[Ll]?\\b(?!\\$)",
+					"name": "constant.numeric.binary.javatown"
+				},
+				{
+					"match": "\\b(?<!\\$)0[0-7]([0-7_]*[0-7])?[Ll]?\\b(?!\\$)",
+					"name": "constant.numeric.octal.javatown"
+				},
+				{
+					"match": "(?x)\n(?<!\\$)\n(\n  \\b[0-9]([0-9_]*[0-9])?\\.\\B(?!\\.)\n  |\n  \\b[0-9]([0-9_]*[0-9])?\\.([Ee][+-]?[0-9]([0-9_]*[0-9])?)[FfDd]?\\b\n  |\n  \\b[0-9]([0-9_]*[0-9])?\\.([Ee][+-]?[0-9]([0-9_]*[0-9])?)?[FfDd]\\b\n  |\n  \\b[0-9]([0-9_]*[0-9])?\\.([0-9]([0-9_]*[0-9])?)([Ee][+-]?[0-9]([0-9_]*[0-9])?)?[FfDd]?\\b\n  |\n  (?<!\\.)\\B\\.[0-9]([0-9_]*[0-9])?([Ee][+-]?[0-9]([0-9_]*[0-9])?)?[FfDd]?\\b\n  |\n  \\b[0-9]([0-9_]*[0-9])?([Ee][+-]?[0-9]([0-9_]*[0-9])?)[FfDd]?\\b\n  |\n  \\b[0-9]([0-9_]*[0-9])?([Ee][+-]?[0-9]([0-9_]*[0-9])?)?[FfDd]\\b\n  |\n  \\b(0|[1-9]([0-9_]*[0-9])?)(?!\\.)[Ll]?\\b\n)\n(?!\\$)",
+					"name": "constant.numeric.decimal.javatown"
+				}
+			]
+		},
+		"object-types": {
+			"patterns": [
 				{
 					"begin": "\\b((?:[A-Za-z_]\\w*\\s*\\.\\s*)*)([A-Z_]\\w*)\\s*(?=\\[)",
 					"beginCaptures": {
@@ -482,6 +720,35 @@
 			"match": "(?<![\\w$])[a-zA-Z_$][\\w$]*(?=\\s*\\.\\s*[\\w$]+)",
 			"name": "variable.other.object.javatown"
 		},
+		"parameters": {
+			"patterns": [
+				{
+					"match": "\\bfinal\\b",
+					"name": "storage.modifier.javatown"
+				},
+				{
+					"include": "#annotations"
+				},
+				{
+					"include": "#all-types"
+				},
+				{
+					"include": "#strings"
+				},
+				{
+					"match": "\\w+",
+					"name": "variable.parameter.javatown"
+				},
+				{
+					"match": ",",
+					"name": "punctuation.separator.delimiter.javatown"
+				},
+				{
+					"match": "\\.\\.\\.",
+					"name": "punctuation.definition.parameters.varargs.javatown"
+				}
+			]
+		},
 		"parens": {
 			"patterns": [
 				{
@@ -495,6 +762,25 @@
 					"endCaptures": {
 						"0": {
 							"name": "punctuation.bracket.round.javatown"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#code"
+						}
+					]
+				},
+				{
+					"begin": "\\[",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.bracket.square.javatown"
+						}
+					},
+					"end": "\\]",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.bracket.square.javatown"
 						}
 					},
 					"patterns": [
@@ -524,8 +810,194 @@
 				}
 			]
 		},
+		"primitive-types": {
+			"match": "\\b(void|boolean|byte|char|short|int|float|long|double)\\b",
+			"name": "storage.type.primitive.javatown"
+		},
+		"properties": {
+			"patterns": [
+				{
+					"match": "(\\.)\\s*([a-zA-Z_$][\\w$]*)(?=\\s*\\.\\s*[a-zA-Z_$][\\w$]*)",
+					"captures": {
+						"1": {
+							"name": "punctuation.separator.period.javatown"
+						},
+						"2": {
+							"name": "variable.other.object.property.javatown"
+						}
+					}
+				},
+				{
+					"match": "(\\.)\\s*([a-zA-Z_$][\\w$]*)",
+					"captures": {
+						"1": {
+							"name": "punctuation.separator.period.javatown"
+						},
+						"2": {
+							"name": "variable.other.object.property.javatown"
+						}
+					}
+				},
+				{
+					"match": "(\\.)\\s*([0-9][\\w$]*)",
+					"captures": {
+						"1": {
+							"name": "punctuation.separator.period.javatown"
+						},
+						"2": {
+							"name": "invalid.illegal.identifier.javatown"
+						}
+					}
+				}
+			]
+		},
+		"record": {
+			"begin": "(?=\\w?[\\w\\s]*\\b(?:record)\\s+[\\w$]+)",
+			"end": "}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.section.class.end.bracket.curly.javatown"
+				}
+			},
+			"name": "meta.record.javatown",
+			"patterns": [
+				{
+					"include": "#storage-modifiers"
+				},
+				{
+					"include": "#comments"
+				},
+				{
+					"begin": "(record)\\s+([\\w$]+)(<[\\w$]+>)?(\\()",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.modifier.javatown"
+						},
+						"2": {
+							"name": "entity.name.type.record.javatown"
+						},
+						"3": {
+							"patterns": []
+						},
+						"4": {
+							"name": "punctuation.definition.parameters.begin.bracket.round.javatown"
+						}
+					},
+					"end": "\\)",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.parameters.end.bracket.round.javatown"
+						}
+					},
+					"name": "meta.record.identifier.javatown",
+					"patterns": [
+						{
+							"include": "#code"
+						}
+					]
+				},
+				{
+					"begin": "(implements)\\s",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.modifier.implements.javatown"
+						}
+					},
+					"end": "(?=\\s*\\{)",
+					"name": "meta.definition.class.implemented.interfaces.javatown",
+					"patterns": [
+						{
+							"include": "#object-types-inherited"
+						},
+						{
+							"include": "#comments"
+						}
+					]
+				},
+				{
+					"include": "#record-body"
+				}
+			]
+		},
+		"record-body": {
+			"begin": "{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.section.class.begin.bracket.curly.javatown"
+				}
+			},
+			"end": "(?=})",
+			"name": "meta.record.body.javatown",
+			"patterns": [
+				{
+					"include": "#record-constructor"
+				},
+				{
+					"include": "#class-body"
+				}
+			]
+		},
+		"record-constructor": {
+			"begin": "(?!new)(?=[\\w<].*\\s+)(?=([^\\(=/]|/(?!/))+(?={))",
+			"end": "(})|(?=;)",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.section.method.end.bracket.curly.javatown"
+				}
+			},
+			"name": "meta.method.javatown",
+			"patterns": [
+				{
+					"include": "#storage-modifiers"
+				},
+				{
+					"begin": "(\\w+)",
+					"beginCaptures": {
+						"1": {
+							"name": "entity.name.function.javatown"
+						}
+					},
+					"end": "(?=\\s*{)",
+					"name": "meta.method.identifier.javatown",
+					"patterns": [
+						{
+							"include": "#comments"
+						}
+					]
+				},
+				{
+					"include": "#comments"
+				},
+				{
+					"begin": "{",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.section.method.begin.bracket.curly.javatown"
+						}
+					},
+					"end": "(?=})",
+					"contentName": "meta.method.body.javatown",
+					"patterns": [
+						{
+							"include": "#code"
+						}
+					]
+				}
+			]
+		},
+		"static-initializer": {
+			"patterns": [
+				{
+					"include": "#anonymous-block-and-instance-initializer"
+				},
+				{
+					"match": "static",
+					"name": "storage.modifier.javatown"
+				}
+			]
+		},
 		"storage-modifiers": {
-			"match": "\\b(public|private)\\b",
+			"match": "\\b(public|private|protected|static|final|native|synchronized|abstract|threadsafe|transient|volatile|default|strictfp|sealed|non-sealed)\\b",
 			"name": "storage.modifier.javatown"
 		},
 		"strings": {
@@ -563,10 +1035,59 @@
 						"0": {
 							"name": "punctuation.definition.string.end.javatown"
 						}
+					},
+					"name": "string.quoted.single.javatown",
+					"patterns": [
+						{
+							"match": "\\\\.",
+							"name": "constant.character.escape.javatown"
+						}
+					]
+				}
+			]
+		},
+		"variables": {
+			"begin": "(?x)\n(?=\n  \\b\n  (\n    (void|boolean|byte|char|short|int|float|long|double)\n    |\n    (?>(\\w+\\.)*[A-Z_]+\\w*) # e.g. `javatownx.ws.rs.Response`, or `String`\n  )\n  \\b\n  \\s*\n  (\n    <[\\w<>,\\.?\\s\\[\\]]*> # e.g. `HashMap<Integer, String>`, or `List<javatown.lang.String>`\n  )?\n  \\s*\n  (\n    (\\[\\])* # int[][]\n  )?\n  \\s+\n  [A-Za-z_$][\\w$]* # At least one identifier after space\n  ([\\w\\[\\],$][\\w\\[\\],\\s]*)? # possibly primitive array or additional identifiers\n  \\s*(=|:|;)\n)",
+			"end": "(?=\\=|:|;)",
+			"name": "meta.definition.variable.javatown",
+			"patterns": [
+				{
+					"match": "([A-Za-z$_][\\w$]*)(?=\\s*(\\[\\])*\\s*(;|:|=|,))",
+					"captures": {
+						"1": {
+							"name": "variable.other.definition.javatown"
+						}
 					}
+				},
+				{
+					"include": "#all-types"
+				},
+				{
+					"include": "#code"
+				}
+			]
+		},
+		"variables-local": {
+			"begin": "(?=\\b(var)\\b\\s+[A-Za-z_$][\\w$]*\\s*(=|:|;))",
+			"end": "(?=\\=|:|;)",
+			"name": "meta.definition.variable.local.javatown",
+			"patterns": [
+				{
+					"match": "\\bvar\\b",
+					"name": "storage.type.local.javatown"
+				},
+				{
+					"match": "([A-Za-z$_][\\w$]*)(?=\\s*(\\[\\])*\\s*(=|:|;))",
+					"captures": {
+						"1": {
+							"name": "variable.other.definition.javatown"
+						}
+					}
+				},
+				{
+					"include": "#code"
 				}
 			]
 		}
-	},
-	"scopeName": "source.jt"
+	}
 }
